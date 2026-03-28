@@ -1,0 +1,40 @@
+1. MULTI_RETURN_MUTATION: dada uma função com retorno múltiplo ou uso de vararg (…), modifique o número de valores retornados — adicione ou remova valores (nil ou reais), altere a ordem, ou troque por expressão vararg — mantendo a lista de expressões válida e correspondendo ao uso no chamador.  
+
+2. ARG_LIST_MUTATION: modifique chamadas de função, construtores de tabela, múltiplas atribuições ou declarações locais trocando o número de argumentos/valores — inserindo valores extras (nil, constantes) ou removendo alguns — preservando sintaxe e número mínimo permitido.  
+
+3. MULTI_RET_IN_SINGLE_EXPR: substitua uma expressão simples por uma chamada que retorna múltiplos valores, em contexto onde se espera apenas um valor — deixando a expressão sintaticamente válida (Lua ajusta valores extras).  
+
+4. METATABLE_MUTATION: gere ou modifique declarações de metatables, metamétodos como `__index`, `__newindex`, `__add`, `__concat`, `__len`, `__call`, etc. — inserindo funções ou campos extras, ou removendo alguns — para testar fallback de metamétodos ou comportamento inesperado. :contentReference[oaicite:0]{index=0}  
+
+5. ESCOPOS_COMPLEXOS: misture estilos de escopo — converta blocos globais para locais e vice-versa, adicione closures, funções locais, funções anônimas, com shadowing de variáveis — provocando bindings, upvalues e possíveis conflitos de escopo.  
+
+6. CONTROLE_ALTERNATIVO: transforme loops `for` numérico em `for … in ipairs/pairs`, ou em `while`, ou em `repeat … until`, adaptando inicialização, incremento e condição — mantendo lógica similar, mas alterando estrutura de controle.  
+
+7. TABELA_COMPLEXA: transforme construtores simples de tabelas em tabelas com metatables, ou com funções como valores, ou campos extras, ou aninhamentos profundos — estruturas complexas para testar parsing e operações de tabela.  
+
+8. ANINHAMENTO_BLOCOS: envolva sub-blocos de código em `do … end`, closures, funções locais ou blocos aninhados de `if/then`, sem mudar a lógica essencial — para gerar aninhamentos de blocos e testar parsing profundo.  
+
+9. DECL_ORDER_MUTATION: reordene declarações locais ou de funções (quando não dependentes), ou intercale declarações e expressões — testando ordenação, forward declarations, e possíveis dependências de inicialização.  
+
+10. LITERAL_MUTATION: modifique literais — strings (inserindo escapes, caracteres especiais, unicode, newlines), números (floats, extremos, negativos, zero), booleanos, nil — para testar parsing de literais e edge-cases.  
+
+11. OPERADOR_BITWISE_E_ARIT: insira operadores bitwise (quando aplicável) ou combine operações aritméticas e bitwise/concatenações entre strings/números — para exercitar coerção de tipos e conversões.  
+
+12. SHADOW_BUILTIN: sobrescreva funções padrão (por exemplo, `table.insert`, `ipairs`, `print`, etc.) com versões locais (closures), e invoque tanto a versão global quanto a local — testando shadowing, escopo e binding.  
+
+13. COROUTINE_MUTATION: gere funções que usam coroutines — combinações de closures + coroutine + `yield` + `resume`, com passes de parâmetros e valores de retorno múltiplos, para testar o runtime de coroutines no Lua 5.4. :contentReference[oaicite:1]{index=1}  
+
+14. ERROR_INJECTION: insira chamadas deliberadas a `error()`, `assert(false)`, ou indexações inválidas dentro de blocos potencialmente capturáveis via `pcall`/`xpcall` — para testar tratamento de erros, exceções e recuperação.  
+
+15. GC_AND_METAGC: crie tabelas com metatables contendo `__gc`, eventualmente com finalizadores, ou simule uso de userdata (quando aplicável) — forçando garbage collection ou finalização automática, para testar coleta de lixo e finalizadores. :contentReference[oaicite:2]{index=2}  
+
+16. DYNAMIC_CHUNK_LOAD: crie trechos de código como strings e carregue via `load`, `loadstring` ou `loadfile` — possivelmente construídos dinamicamente — para exercitar parsing dinâmico, compilação em runtime e casos extremos de carregamento.  
+
+17. MODULES_REQUIRE_MUTATION: misture uso de módulos com `require`, manipule `package.path`, simule módulos fictícios ou mocks, use requerimentos duplicados ou redefinições — para testar sistema de módulos, cache de carga e conflitos.  
+
+18. FORMATTING_MUTATION: insira ou remova comentários, espaços, quebras de linha, indentação irregular, caracteres invisíveis (tabs, non-breaking spaces, BOM) — para testar tolerância do parser à formatação e tokens.  
+
+19. IDENTIFIER_EDGECASE: use nomes de variáveis / funções / campos de tabela com nomes atípicos — nomes longos, com underscores, unicode, caracteres repetidos, redeclarações, shadowing, reatribuições — para estressar o lexer/parser.  
+
+20. DECLARACOES_MISTAS: combine diferentes estilos de declaração — declarações múltiplas (local a, b, c = …), declarações simples, atribuições em linhas separadas, intercaladas com blocos ou expressões — para testar parsing robusto de declarações diversas.  
+
