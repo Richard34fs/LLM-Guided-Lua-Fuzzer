@@ -1,0 +1,9 @@
+function create_memory_churn()
+for i = 1, 1000 do
+local temp_table = {}
+setmetatable(temp_table, {__mode = "k"})
+temp_table[i] = i
+temp_table = nil
+collectgarbage()
+end
+end

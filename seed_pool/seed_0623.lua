@@ -1,0 +1,11 @@
+function churn_memory()
+local temp_table = {}
+setmetatable(temp_table, {__mode = 'kv'})
+for i = 1, 100000 do
+local obj = {id = i}
+temp_table[obj] = true
+if i % 100 == 0 then
+collectgarbage()
+end
+end
+end

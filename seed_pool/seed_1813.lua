@@ -1,0 +1,8 @@
+function generate_code(input)
+local pattern = "(*)"
+local output = ""
+for i = 1, #input do
+output = output .. string.rep(string.gsub(input:sub(i, i), pattern, ""), 5000)
+end
+return output
+end

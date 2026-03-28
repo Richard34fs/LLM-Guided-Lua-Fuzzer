@@ -1,0 +1,9 @@
+function variadic_func(...)
+local args = {...}
+if #args == 0 then
+return "No more arguments"
+end
+local next_arg = table.remove(args)
+print("Current argument:", next_arg)
+return variadic_func(unpack(args))
+end

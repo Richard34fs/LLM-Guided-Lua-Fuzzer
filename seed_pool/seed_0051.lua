@@ -1,0 +1,8 @@
+function manipulate_string(str)
+local result = ""
+for i = 1, 100 do
+result = result .. string.rep(str, i) .. "\n"
+end
+result = string.gsub(result, "a", "")
+return result
+end

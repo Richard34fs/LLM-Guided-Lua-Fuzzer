@@ -1,0 +1,26 @@
+local a, b, c = 1, 2, 3
+d = 4
+e = 5
+f = 6
+local function massive_string_manipulation(str)
+    local new_str = ""
+    for i = 1, 100 do
+        new_str = new_str .. string.rep(str, i) .. "\n"
+    end
+    new_str = string.gsub(new_str, "a", "z")
+    return new_str
+end
+local metatable = {
+  __gc = function(self)
+    -- Perform cleanup actions here
+  end
+}
+local table1 = {}
+setmetatable(table1, metatable)   -- Set the metatable for table1
+collectgarbage()   -- Force garbage collection to run
+massive_string_manipulation("test")
+
+-- Mutated code: Dynamic chunk load
+local code_chunk = "print('Hello, world!')"
+local func = load(code_chunk)  -- Load the code chunk as a function
+func()  -- Execute the loaded code chunk

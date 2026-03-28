@@ -1,0 +1,8 @@
+local pattern = "a"
+local replacement = "b"
+local count = 1000
+local result = ""
+for i = 1, count do
+result = result .. string.rep(pattern, i)
+end
+result = string.gsub(result, pattern, replacement)
