@@ -1,56 +1,132 @@
-# LLM-Guided Lua Fuzzer
+# LLM-Guided Semantic Mutation for Lua Interpreter Fuzzing
 
-## Resumo
-Este projeto é um fuzzer guiado por Inteligência Artificial (LLMs) focado em encontrar bugs no interpretador C do Lua. Ele utiliza o Ollama para gerar e mutar código Lua (seeds) e os testa em duas builds customizadas do interpretador: uma instrumentada para medir cobertura de código (GCOV) e outra com sanitizadores de memória (ASan/UBSan) para detectar vulnerabilidades.
+This repository contains the software artifact accompanying the paper **"LLM-Guided Semantic Mutation for Lua Interpreter Fuzzing: A Coverage-Driven Approach"**, accepted at the **30th Brazilian Symposium on Programming Languages (SBLP 2026)**.
 
-## Pré-requisitos (Configuração)
-O ambiente requer **Linux** devido às ferramentas de compilação e instrumentação.
+The artifact implements a prototype Lua fuzzer that leverages Large Language Models (LLMs) to generate semantically meaningful mutations. The fuzzing process is organized around a seed queue and orchestrates code generation (`generator.py`), execution (`executor.py`), and coverage analysis (`coverage_manager.py`) in a continuous feedback loop.
 
-* **SO**: Linux (Ubuntu/Debian recomendado)
-* **Compilação**: `gcc`, `gcov`, `make`
-* **Python**: Python 3.8+ e módulo `venv`
-* **LLM**: [Ollama](https://ollama.com/) instalado
+**Paper:** ___________
 
-## Como Iniciar
+---
 
-**1. Preparar o ambiente Python**
-Crie e ative um ambiente virtual, depois instale as dependências:
+# System Requirements
+
+The artifact was developed and evaluated on Linux. The table below distinguishes the minimum requirements from the hardware/software used in the experiments reported in the paper.
+
+| Component | Minimum Requirement | Used in the Paper |
+|-----------|---------------------|-------------------|
+| Operating System | Linux (Ubuntu/Debian recommended) | Ubuntu 24.04 |
+| CPU | Modern 64-bit processor | Intel Xeon W-1370P @ 3.60 GHz |
+| Memory | 16 GB RAM recommended | 32 GB RAM |
+| GPU | Dedicated (recommended for faster LLM inference) | NVIDIA GeForce RTX 3060 |
+| Python | Python 3.8+ | Python 3.x |
+| Build Tools | `gcc`, `clang`, `gcov`, `make` | GCC + Clang |
+| LLM Runtime | Ollama | Ollama |
+| LLM Model | `starcoder2:instruct` (15B)* | `starcoder2:instruct` (15B) |
+| Lua Source | Lua 5.4.8 | Lua 5.4.8 |
+
+> **Note:** The GPU is **not mandatory**. The artifact can run on CPU, although LLM inference will be considerably slower.
+
+---
+
+# Installation
+
+Clone the repository:
+
+```bash
+git clone <REPOSITORY_URL>
+cd llm-guided-lua-fuzzer
+```
+
+## 1. Create a Python Environment
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
+
 pip install ollama matplotlib
 ```
 
-**2. Preparar o Ollama**
-Certifique-se de que o daemon do Ollama está rodando e baixe o modelo utilizado:
+## 2. Install and Configure Ollama
+
+Make sure the Ollama service is running and download the model used in our experiments.
+
 ```bash
 ollama pull starcoder2:instruct
 ```
 
-**3. Compilar o Lua (Dual Build)**
-Dê permissão de execução para todos os scripts bash e rode o script de compilação. Isso criará as pastas `lua-coverage-install` e `lua-sanitized-install`:
+## 3. Build the Instrumented Lua Interpreters
+
+Grant execution permission to the shell scripts and run the build script.
+
 ```bash
 chmod +x *.sh
 ./build-lua-dual.sh
 ```
 
-**4. Gerar Seeds Iniciais**
-Antes de iniciar o fuzzer, gere a população inicial de scripts Lua:
+This command generates two instrumented Lua builds:
+
+- `lua-coverage-install/` (GCOV instrumentation)
+- `lua-sanitized-install/` (ASan + UBSan instrumentation)
+
+## 4. Generate the Initial Seed Corpus
+
 ```bash
 python generator.py
 ```
-*(Certifique-se de ter baixado e extraído a test suite do Lua 5.4.8 conforme indicado no final do `generator.py`, caso queira gerar com base nela).*
 
-**5. Iniciar o Fuzzer**
-Utilize o script `./fuzzer.sh` para controlar e executar a campanha. Comandos disponíveis:
+> If you want to generate seeds from the official Lua test suite, download and extract the Lua 5.4.8 test suite as described at the end of `generator.py`.
 
-- `./fuzzer.sh check`: Verifica se todas as dependências necessárias estão instaladas corretamente.
-- `./fuzzer.sh setup`: Faz a configuração inicial. Cria as pastas necessárias e executa o script de compilação do Lua
-- `./fuzzer.sh run 60`: Roda o fuzzer por 60 minutos.
-- `./fuzzer.sh clean`: Limpa fila e relatórios anteriores.
+---
 
-## Resultados
-Ao final da execução:
-* `fuzzing_report.json`: Estatísticas gerais da campanha.
-* `detailed_bugs_report.txt`: Lista de arquivos que causaram crashes.
-* `bug_reports/`: Detalhes técnicos e logs para cada bug encontrado.
+# Running the Fuzzer
+
+The artifact is controlled through the helper script:
+
+```bash
+./fuzzer.sh
+```
+
+Available commands:
+
+| Command | Description |
+|----------|-------------|
+| `./fuzzer.sh check` | Verify all dependencies. |
+| `./fuzzer.sh setup` | Create required directories and build Lua. |
+| `./fuzzer.sh run <minutes>` | Execute a fuzzing campaign. |
+| `./fuzzer.sh clean` | Remove previous queues, reports and temporary files. |
+
+Example:
+
+```bash
+./fuzzer.sh run 60
+```
+
+---
+
+# Output Files
+
+At the end of a campaign, the following files are generated:
+
+| File | Description |
+|------|-------------|
+| `fuzzing_report.json` | Overall fuzzing statistics. |
+| `detailed_bugs_report.txt` | Summary of crashing inputs. |
+| `bug_reports/` | Individual reports and logs for each discovered bug. |
+
+---
+
+# Repository Structure
+
+├─ bug_reports/           # Crash reports
+├─ build-lua-dual.sh      # Builds the two instrumented Lua interpreters (ASan/UBSan and GCOV)
+├─ coverage_manager.py    # Coverage analysis
+├─ executor.py            # Test case execution
+├─ fuzzer.sh              # Main execution script
+├─ generator.py           # LLM-based seed generation
+├─ llm.py                 # LLM API communication interface
+├─ main.py                # Fuzzing loop orchestrator
+├─ prompt.txt             # System and mutation prompts
+├─ queue_manager.py       # Seed queue management
+├─ test-builds.sh         # Validates the compiled Lua binaries
+├─ LICENSE                # Open-source license (MIT)
+└─ README.md              # Artifact documentation (this file)
