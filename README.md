@@ -4,8 +4,6 @@ This repository contains the software artifact accompanying the paper **"LLM-Gui
 
 The artifact implements a prototype Lua fuzzer that leverages Large Language Models (LLMs) to generate semantically meaningful mutations. The fuzzing process is organized around a seed queue and orchestrates code generation (`generator.py`), execution (`executor.py`), and coverage analysis (`coverage_manager.py`) in a continuous feedback loop.
 
-**Paper:** ___________
-
 ---
 
 # System Requirements
@@ -117,16 +115,23 @@ At the end of a campaign, the following files are generated:
 
 # Repository Structure
 
-├─ bug_reports/           # Crash reports
-├─ build-lua-dual.sh      # Builds the two instrumented Lua interpreters (ASan/UBSan and GCOV)
-├─ coverage_manager.py    # Coverage analysis
-├─ executor.py            # Test case execution
-├─ fuzzer.sh              # Main execution script
-├─ generator.py           # LLM-based seed generation
-├─ llm.py                 # LLM API communication interface
-├─ main.py                # Fuzzing loop orchestrator
-├─ prompt.txt             # System and mutation prompts
-├─ queue_manager.py       # Seed queue management
-├─ test-builds.sh         # Validates the compiled Lua binaries
-├─ LICENSE                # Open-source license (MIT)
-└─ README.md              # Artifact documentation (this file)
+├─ bug_reports/           # Crash reports\
+├─ build-lua-dual.sh      # Builds the two instrumented Lua interpreters (ASan/UBSan and GCOV)\
+├─ coverage_manager.py    # Coverage analysis\
+├─ executor.py            # Test case execution\
+├─ fuzzer.sh              # Main execution script\
+├─ generator.py           # LLM-based seed generation\
+├─ llm.py                 # LLM API communication interface\
+├─ main.py                # Fuzzing loop orchestrator\
+├─ prompt.txt             # System and mutation prompts\
+├─ queue_manager.py       # Seed queue management\
+├─ test-builds.sh         # Validates the compiled Lua binaries\
+├─ LICENSE                # Open-source license (MIT)\
+└─ README.md              # Artifact documentation (this file)\
+
+## Authors
+
+- Richard Facin Souza
+- Andrei De Almeida Sampaio Braga
+- Samuel Da Silva Feitosa
+- Giancarlo Dondoni Salton
