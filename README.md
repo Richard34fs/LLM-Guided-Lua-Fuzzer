@@ -127,7 +127,7 @@ At the end of a campaign, the following files are generated:
 ├─ queue_manager.py       # Seed queue management\
 ├─ test-builds.sh         # Validates the compiled Lua binaries\
 ├─ LICENSE                # Open-source license (MIT)\
-└─ README.md              # Artifact documentation (this file)\
+└─ README.md              # Artifact documentation
 
 ## Authors
 
