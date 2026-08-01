@@ -4,6 +4,8 @@ This repository contains the software artifact accompanying the paper **"LLM-Gui
 
 The artifact implements a prototype Lua fuzzer that leverages Large Language Models (LLMs) to generate semantically meaningful mutations. The fuzzing process is organized around a seed queue and orchestrates code generation (`generator.py`), execution (`executor.py`), and coverage analysis (`coverage_manager.py`) in a continuous feedback loop.
 
+**Paper:** [LLM-Guided Semantic Mutation for Lua Interpreter Fuzzing](LLM-Guided_Semantic_Mutation_for_Lua_Interpreter_Fuzzing.pdf)
+
 ---
 
 # System Requirements
